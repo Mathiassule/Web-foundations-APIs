@@ -1,0 +1,122 @@
+{
+  "client_to_server": {
+    "create_subject": {
+      "endpoint": "POST /subjects",
+      "headers": {
+        "Authorization": "Basic YWRtaW46YWRtaW4xMjM=",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "id": "MTH101",
+        "name": "General Mathematics I",
+        "credit_units": 3
+      }
+    },
+    "create_assessment": {
+      "endpoint": "POST /assessments",
+      "headers": {
+        "Authorization": "Basic YWRtaW46YWRtaW4xMjM=",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "id": "MTH-MID1",
+        "subject_id": "MTH101",
+        "title": "Midterm Examination",
+        "max_score": 100.0,
+        "weight_percentage": 30.0
+      }
+    },
+    "record_score": {
+      "endpoint": "POST /scores",
+      "headers": {
+        "Authorization": "Basic YWRtaW46YWRtaW4xMjM=",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "student_id": "STD2026-0042",
+        "assessment_id": "MTH-MID1",
+        "obtained_score": 87.5
+      }
+    },
+    "update_score": {
+      "endpoint": "PUT /scores/{score_id}",
+      "headers": {
+        "Authorization": "Basic YWRtaW46YWRtaW4xMjM=",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "obtained_score": 92.0
+      }
+    }
+  },
+  "server_to_client": {
+    "success_subject_created": {
+      "status_code": 201,
+      "body": {
+        "id": "MTH101",
+        "name": "General Mathematics I",
+        "credit_units": 3
+      }
+    },
+    "success_score_recorded": {
+      "status_code": 201,
+      "body": {
+        "id": "A4E7B29F",
+        "student_id": "STD2026-0042",
+        "assessment_id": "MTH-MID1",
+        "subject_id": "MTH101",
+        "obtained_score": 87.5,
+        "max_score": 100.0,
+        "percentage": 87.5,
+        "grade": "B"
+      }
+    },
+    "success_student_results_summary": {
+      "status_code": 200,
+      "body": {
+        "student_id": "STD2026-0042",
+        "total_assessments": 1,
+        "overall_average": 92.0,
+        "scores": [
+          {
+            "id": "A4E7B29F",
+            "student_id": "STD2026-0042",
+            "assessment_id": "MTH-MID1",
+            "subject_id": "MTH101",
+            "obtained_score": 92.0,
+            "max_score": 100.0,
+            "percentage": 92.0,
+            "grade": "A"
+          }
+        ]
+      }
+    },
+    "error_401_unauthorized": {
+      "status_code": 401,
+      "body": {
+        "detail": {
+          "code": "INVALID_CREDENTIALS",
+          "message": "Invalid username or password"
+        }
+      }
+    },
+    "error_400_score_exceeded": {
+      "status_code": 400,
+      "body": {
+        "detail": {
+          "code": "INVALID_SCORE",
+          "message": "Obtained score (115.0) cannot exceed maximum allowed (100.0)"
+        }
+      }
+    },
+    "error_422_validation_failed": {
+      "status_code": 422,
+      "body": {
+        "error": {
+          "code": "VALIDATION_FAILED",
+          "message": "Validation error at 'body.credit_units': Input should be less than or equal to 6"
+        }
+      }
+    }
+  }
+}

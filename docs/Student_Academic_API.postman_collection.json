@@ -1,0 +1,230 @@
+{
+  "info": {
+    "_postman_id": "7f8b91a2-4a11-479e-b9b2-32a823e2026a",
+    "name": "Student Academic & Assessment Management API",
+    "description": "Postman Collection for testing FastAPI endpoints: Subjects, Assessments, Scores, Averages, and Authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{admin_user}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{admin_password}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "admin_user",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "admin_password",
+      "value": "admin123",
+      "type": "string"
+    },
+    {
+      "key": "created_score_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "Subjects",
+      "item": [
+        {
+          "name": "Create Subject (POST /subjects)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"MTH101\",\n  \"name\": \"General Mathematics I\",\n  \"credit_units\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subjects",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects"]
+            }
+          }
+        },
+        {
+          "name": "List Subjects (GET /subjects)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subjects",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assessments",
+      "item": [
+        {
+          "name": "Create Assessment (POST /assessments)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"MTH-QUIZ1\",\n  \"subject_id\": \"MTH101\",\n  \"title\": \"Quiz 1 - Linear Algebra\",\n  \"max_score\": 30.0,\n  \"weight_percentage\": 20.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assessments",
+              "host": ["{{baseUrl}}"],
+              "path": ["assessments"]
+            }
+          }
+        },
+        {
+          "name": "List Assessments (GET /assessments)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/assessments",
+              "host": ["{{baseUrl}}"],
+              "path": ["assessments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scores",
+      "item": [
+        {
+          "name": "Record Student Score (POST /scores)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('created_score_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": \"STD2026-0042\",\n  \"assessment_id\": \"MTH-QUIZ1\",\n  \"obtained_score\": 27.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/scores",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores"]
+            }
+          }
+        },
+        {
+          "name": "Update Score (PUT /scores/:score_id)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"obtained_score\": 29.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/scores/{{created_score_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "{{created_score_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Results & Analytics",
+      "item": [
+        {
+          "name": "Get Student Results (GET /students/:student_id/results)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/STD2026-0042/results",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", "STD2026-0042", "results"]
+            }
+          }
+        },
+        {
+          "name": "Get Subject Average (GET /subjects/:subject_id/average)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/MTH101/average",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", "MTH101", "average"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
